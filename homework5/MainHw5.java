@@ -1,0 +1,55 @@
+package geekbrains.jmaxim1906.Java2.homework5;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
+
+/**1. Реализовать сохранение данных в csv файл;
+ * 2. Реализовать загрузку данных из csv файла. Файл читается целиком.
+ * Структура csv файла:
+ * | Строка заголовок с набором столбцов |
+ * | Набор строк с целочисленными значениями |
+ * | * Разделитель между столбцами - символ точка с запятой (;) |
+ * Пример:
+ * Value 1;Value 2;Value 3
+ * 100;200;123
+ * 300,400,500
+ * Для хранения данных использовать класс вида:
+ * public class AppData {
+ *   private String[] header;
+ *   private int[][] data;
+ *
+ *  // ...
+ * }
+ * Если выполняется save(AppData data), то старые данные в файле полностью перезаписываются.
+ */
+
+public class MainHw5 {
+    public static final String FILE_NAME = "table.csv"; //обьявляем переменную с названием файла
+
+    public static void main(String[] args) {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(FILE_NAME)) { // открываем  поток к File name
+            byte[] csvData = newData().toString().getBytes(StandardCharsets.UTF_8); //метод new Data
+            fileOutputStream.write(csvData);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        try (FileInputStream fileInputStream = new FileInputStream(FILE_NAME)) {
+            byte[] csvData = new byte[fileInputStream.available()];
+            fileInputStream.read(csvData);
+            String table = new String(csvData);
+            System.out.println(table);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    public static AppData newData() {     //создаем объект типа AppData
+        AppData appData = new AppData();
+        String[] headers = new String[] { "title 1", "title 2", "title 3" };
+        appData.init(headers);
+        return appData;
+    }
+}
